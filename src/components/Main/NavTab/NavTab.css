@@ -1,0 +1,48 @@
+.navTab {
+  padding: 25px 0;
+
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+
+  background: #272727;
+}
+
+.navTab__link {
+  text-align: center;
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 500;
+  text-decoration: underline;
+  color: #FFF;
+
+  transition-property: opacity;
+  transition-duration: .7s;
+}
+
+.navTab__link:hover {
+  opacity: .7;
+}
+
+
+@media (max-width: 768px) {
+
+  .navTab__link {
+    font-size: 13px;
+    line-height: 16px;
+  }
+}
+
+
+@media (max-width: 320px) {
+
+  .navTab {
+    gap: 24px;
+  }
+
+  .navTab__link {
+    font-size: 11px;
+    line-height: 16px;
+  }
+}
+

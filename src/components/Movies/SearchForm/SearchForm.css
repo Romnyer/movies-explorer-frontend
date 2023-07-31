@@ -1,0 +1,154 @@
+.search {
+  padding: 80px 0 39px;
+  margin: 0 70px 10px;
+
+  border-bottom: 1px solid #424242;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.search__form {
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.search__field {
+  width: 100%;
+
+  padding: 15px 0 15px 22px;
+
+  border: none;
+  border-radius: 4px;
+  background: #2F2F2F;
+
+  font-size: 14px;
+  line-height: 18px;
+  color: #8B8B8B;
+}
+
+.search__field:focus-visible {
+  outline: 1px solid #4285F4;
+}
+
+.search__submit {
+  min-width: 70px;
+
+  padding: 13px 5px;
+  margin-left: 10px;
+
+  border: none;
+  border-radius: 40px;
+  background: #4285F4;
+
+  transition-property: opacity;
+  transition-duration: .7s;
+
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.search__submit:hover {
+  opacity: .8;
+}
+
+.search__container {
+  margin-top: 30px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.search__label {
+  height: 20px;
+
+  position: relative;
+}
+
+.search__checkbox {
+  -webkit-appearance: none;
+  appearance: none;
+
+  width: 36px;
+  height: 20px;
+
+  position: relative;
+
+  background: #343434;
+  border-radius: 10px;
+
+  transition-property: background-color;
+  transition-duration: .5s;
+
+  cursor: pointer;
+}
+
+.search__checkbox:checked {
+  background-color: #4285F4
+}
+
+.search__checkbox:before {
+  width: 8px;
+  height: 8px;
+
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6px;
+
+  border-radius: 50%;
+  background: #A0A0A0;
+
+  transition-property: transform, background-color;
+  transition-duration: .5s;
+}
+
+.search__checkbox:checked:before {
+  transform: translateX(16px);
+  background-color: #fff;
+}
+
+.search__text {
+  margin: 0 0 0 13px;
+
+  font-size: 12px;
+  line-height: 18px;
+}
+
+
+@media (max-width: 768px) {
+
+  .search {
+    margin: 0 30px 10px;
+  }
+}
+
+
+@media (max-width: 320px) {
+
+  .search {
+    padding: 81px 0 43px;
+    margin: 0 14px 10px;
+  }
+
+  .search__field {
+    padding: 13px 0 13px 16px;
+
+    font-size: 12px;
+  }
+
+  .search__container {
+    margin-top: 44px;
+  }
+
+  .search__text {
+    font-size: 11px;
+  }
+}

@@ -1,0 +1,30 @@
+.logo_for_auth {
+  padding: 70px 0 40px;
+}
+
+.logo__pic {
+  display: block;
+}
+
+@media (max-width: 768px) {
+
+  .logo_for_auth {
+    padding-top: 0;
+  }
+}
+
+
+@media (max-width: 455px) {
+
+  .logo_for_auth {
+    margin: 0 auto;
+  }
+}
+
+
+@media (max-width: 320px) {
+
+  .logo_for_auth {
+    padding: 56px 30px 50px;
+  }
+}
