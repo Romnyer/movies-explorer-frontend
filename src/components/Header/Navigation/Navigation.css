@@ -1,0 +1,107 @@
+.navigation {
+  display: flex;
+  align-items: center;
+}
+
+.navigation__link {
+  margin-right: 20px;
+
+  transition-property: opacity;
+  transition-duration: .7s;
+
+  text-decoration: none;
+  text-align: center;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 400;
+  color: #fff;
+}
+.navigation__link:hover {
+  opacity: .7;
+}
+
+.navigation__link_for_login {
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.navigation__link_for_active {
+  margin-left: 30px;
+  margin-right: 0;
+  padding: 8px 22px;
+
+  background: #313131;
+  border-radius: 20px;
+
+  line-height: 16px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.navigation__link_for_auth {
+  margin-left: 10px;
+  padding: 8px 20px;
+
+  border-radius: 3px;
+  background: #4285F4;
+
+  font-size: 12px;
+  color: #000;
+}
+
+.navigation__link_for_current {
+  font-weight: 500;
+}
+
+.navigation__burger-button {
+  display: none;
+
+  padding: 0;
+
+  width: 44px;
+  height: 44px;
+
+  border: none;
+  background: url(../../../images/burger-large.svg) center center no-repeat;
+}
+
+
+@media (max-width: 768px) {
+
+  .navigation__burger-button {
+    display: block;
+  }
+
+  .navigation__link {
+    font-size: 12px;
+  }
+
+  .navigation__link_for_login {
+    display: none;
+  }
+
+  .navigation__link_for_active {
+    margin-left: 10px;
+  }
+}
+
+@media (max-width: 320px) {
+
+  .navigation__link {
+    margin-right: 0;
+
+    font-size: 10px;
+  }
+
+  .navigation__link_for_active {
+    padding: 5px 12px;
+    margin-left: 14px;
+  }
+
+  .navigation__burger-button {
+    width: 40px;
+    height: 43px;
+
+    background: url(../../../images/burger.svg) center center no-repeat;
+  }
+}

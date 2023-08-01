@@ -1,0 +1,10 @@
+@import url(./vendor/normalize.css);
+@import url(./vendor/fonts/Inter-Web/inter.css);
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background: #202020;
+}

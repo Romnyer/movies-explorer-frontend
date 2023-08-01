@@ -1,0 +1,153 @@
+.burger-menu {
+  height: 100%;
+  width: 100%;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  background: rgba(0, 0, 0, .3);
+
+  visibility: visible;
+  opacity: 1;
+  z-index: 1;
+
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+
+  transition-property: opacity, visibility;
+  transition-duration: .7s;
+}
+
+.burger-menu_hidden {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.burger-menu__button {
+  width: 44px;
+  height: 44px;
+  display: none;
+
+  margin: 16px 16px 101px 0;
+  padding: 0;
+
+  border: none;
+  background: url(../../../images/close-Icon.svg) center center no-repeat;
+
+  align-self: flex-end;
+}
+
+.burger-menu__container {
+  height: 100%;
+
+  position: relative;
+
+  background: #202020;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  transition-property: transform;
+  transition-duration: .7s;
+}
+
+.burger-menu__list {
+  margin: 0;
+  padding: 0;
+
+  list-style-type: none;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.burger-menu__item {
+  margin-bottom: 29px;
+}
+
+.burger-menu__link {
+  transition-property: opacity;
+  transition-duration: .7s;
+
+  text-decoration: none;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 500;
+  color: #FFF;
+}
+
+.burger-menu__link:hover {
+  opacity: .7;
+}
+
+.burger-menu__link_active {
+  padding-bottom: 4px;
+
+  border-bottom: 2px solid #fff;
+}
+
+.burger-menu__profile-button {
+  margin-top: 592px;
+  padding: 8px 20px;
+
+  background: #313131;
+  border-radius: 20px;
+
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+
+  .burger-menu {
+    display: flex;
+  }
+
+  .burger-menu__container {
+    width: 67.71vw;
+
+    transform: translateX(32.3px);
+  }
+
+  .burger-menu__container_active {
+    transform: translateX(0);
+  }
+
+  .burger-menu__button {
+    display: block;
+  }
+
+}
+
+
+@media (max-width: 320px) {
+
+  .burger-menu__container {
+    width: 100%;
+  }
+
+  .burger-menu__link_active {
+    padding-bottom: 7px;
+  }
+
+  .burger-menu__button {
+    width: 40px;
+    height: 43px;
+
+    margin: 7px 9px 96px;
+    background: url(../../../images/close-Icon-small.svg) center center no-repeat;
+  }
+
+  .burger-menu__item {
+    margin-bottom: 25px;
+  }
+
+  .burger-menu__profile-button {
+    margin-top: 419px;
+  }
+
+}
