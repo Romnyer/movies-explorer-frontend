@@ -4,6 +4,9 @@
 
   border-radius: 6px;
   background: #222;
+
+  text-decoration: none;
+  color: #fff;
 }
 
 .card__container {
@@ -27,11 +30,8 @@
 }
 
 .card__time {
+  min-width: 40px;
   margin: 0;
-
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
 
   text-align: right;
   font-size: 13px;
@@ -39,8 +39,15 @@
   color: #8B8B8B;
 }
 
+.card__link {
+  display: block;
+
+  cursor: pointer;
+}
+
 .card__pic {
   height: 15.625vw;
+  width: 100%;
   max-height: 200px;
 
   display: block;
@@ -98,7 +105,7 @@
 }
 
 
-@media (max-width: 455px) {
+@media (max-width: 480px) {
 
   .card__pic {
     height: 41.76vw;

@@ -1,18 +1,35 @@
+import { useState, useContext } from 'react';
+
 import './SavedMovies.css';
 
-import SearchForm from '../Movies/SearchForm/SearchForm';
-import MoviesCardList from '../Movies/MoviesCardList/MoviesCardList';
+import SearchForm from '../SearchForm/SearchForm';
+import MoviesCardList from '../MoviesCardList/MoviesCardList';
 
-function SavedMovies({ savedCards, handleCardDelete }) {
+import { SavedMoviesContext } from '../../contexts/SavedMoviesContext';
+
+function SavedMovies() {
+
+  const [request, setRequest] = useState(''),
+        [isShortFilm, setShortFilm] = useState(false);
+
+  const { storedMovies } = useContext(SavedMoviesContext);
+
+
+  function handleSavedMovieSubmit(value, checked) {
+    setRequest(value);
+    setShortFilm(checked);
+  };
+
+
 
   return (
     <>
-      <SearchForm />
+      <SearchForm handleMovieSubmit={ handleSavedMovieSubmit } />
       <MoviesCardList
-        cardsData={ savedCards }
+        cardsData={ storedMovies }
         isCardDelete={ true }
-        handleCardDelete={ handleCardDelete }
-        isCardsButton = { false }
+        request={ request }
+        isShortFilm={ isShortFilm }
       />
     </>
   )
