@@ -1,0 +1,133 @@
+.card {
+  display: flex;
+  flex-direction: column;
+
+  border-radius: 6px;
+  background: #222;
+}
+
+.card__container {
+  padding: 18px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card__title {
+  margin: 0;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+
+  font-size: 15px;
+  line-height: 18px;
+  font-weight: 500;
+}
+
+.card__time {
+  margin: 0;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+
+  text-align: right;
+  font-size: 13px;
+  line-height: 18px;
+  color: #8B8B8B;
+}
+
+.card__pic {
+  height: 15.625vw;
+  max-height: 200px;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+.card__button {
+  width: 100px;
+  height: 29px;
+
+  display: block;
+
+  margin: 18px auto;
+  padding: 0;
+
+  position: relative;
+
+  background: #313131 no-repeat center center;
+  border: none;
+  border-radius: 15px;
+
+  transition-property: opacity;
+  transition-duration: .7s;
+
+  text-align: center;
+  font-size: 12px;
+  line-height: 11px;
+  color: #fff;
+
+  cursor: pointer;
+}
+
+.card__button:hover {
+  opacity: .8;
+}
+
+.card__button_for_save {
+  background: #ee3465 url(../../../images/saved.svg);
+}
+
+
+.card__button_for_delete {
+  background-image: url(../../../images/unsave-cross.svg);
+}
+
+
+@media (max-width: 768px) {
+
+  .card__pic {
+    height: 24.54vw;
+    max-height: 190px;
+  }
+
+}
+
+
+@media (max-width: 455px) {
+
+  .card__pic {
+    height: 41.76vw;
+  }
+
+}
+
+
+@media (max-width: 320px) {
+
+  .card__container {
+    padding: 14px;
+  }
+
+  .card__title {
+    font-size: 12px;
+  }
+
+  .card__button {
+    margin: 14px auto;
+  }
+
+  .card__pic {
+    height: 52.5vw;
+    max-height: 168px;
+  }
+
+  .card__time {
+    font-size: 10px;
+  }
+
+}

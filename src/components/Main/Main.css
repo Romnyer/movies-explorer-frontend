@@ -1,0 +1,41 @@
+.main__subtitle {
+  margin: 0 70px;
+  padding: 111px 0 22px;
+
+  border-bottom: 1px solid #dadada;
+
+  font-size: 22px;
+  line-height: 27px;
+  font-weight: 400;
+  letter-spacing: -0.88px;
+}
+
+.main__subtitle_for_tech {
+  padding-top: 100px;
+}
+
+
+@media (max-width: 768px) {
+
+  .main__subtitle {
+    margin: 0 50px;
+    padding-top: 91px;
+  }
+}
+
+
+@media (max-width: 320px) {
+
+  .main__subtitle {
+    margin: 0 18px;
+    padding: 71px 0 27px;
+
+    font-size: 18px;
+    line-height: 22px;
+    letter-spacing: -0.72px;
+  }
+
+  .main__subtitle_for_me {
+    margin: 0 14px;
+  }
+}

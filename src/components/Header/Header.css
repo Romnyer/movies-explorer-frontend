@@ -1,0 +1,42 @@
+.header {
+  width: 100vw;
+  max-width: 1280px;
+  height: 74px;
+  box-sizing: border-box;
+
+  padding: 0 70px;
+
+  background: #26477D;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.header__menu {
+  width: 100%;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  text-align: center;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 16px;
+  color: #fff;
+}
+
+
+@media (max-width: 768px) {
+  .header {
+    padding: 0 30px;
+  }
+}
+
+
+@media (max-width: 320px) {
+  .header {
+    padding: 0 14px;
+  }
+}
