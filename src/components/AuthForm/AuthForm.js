@@ -8,7 +8,7 @@ import Logo from '../Logo/Logo';
 import { useFormWithValidation } from '../../hooks/useFormValidation';
 import { setCustomNameValidError, setCustomEmailValidError, setErrorText } from '../../utils/utils';
 
-function AuthForm({ isSignIn, handleSubmit, preloader, submitError = false }) {
+function AuthForm({ isSignIn, handleSubmit, preloader, submitError }) {
 
   const [submitErrorText, setSubmitErrorText] = useState(false);
 

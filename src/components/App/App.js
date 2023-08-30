@@ -39,7 +39,20 @@ function App() {
   /* Handlers */
 
 
-  function getSavedMovies() {
+  const getUser = function() {
+    mainApi.getUserInfo()
+      .then((userData) => {
+        setCurrentUser(userData);
+        setLoggedIn(true);
+        setCheckedIn(true);
+      })
+      .catch((err) => {
+        console.log(err.message);
+        setCheckedIn(true);
+      });
+  };
+
+  const getSavedMovies = function() {
     mainApi.getUserMovies()
       .then((movies) => {
         setStoredMovies(movies);
@@ -51,8 +64,12 @@ function App() {
   function handleAuthorization() {
     setLoggedIn(true);
     getSavedMovies();
-
     navigate('/movies', { replace: true });
+  };
+
+  function handleFullAuthorization() {
+    getUser();
+    handleAuthorization();
   };
 
   function handleAuthFormError(err) {
@@ -60,9 +77,17 @@ function App() {
     setAuthFormError(err.status);
   };
 
+  function handleSignIn(email, password, handleAuth) {
+    authApi.signIn(email, password)
+      .then((jwt) => localStorage.setItem('jwt', jwt.token))
+      .then(() => handleAuth())
+      .catch((err) => handleAuthFormError(err))
+      .finally(() => setAuthFormPreloader(false));
+  };
+
   function handleLogout() {
     setLoggedIn(false);
-    setCurrentUser({});
+    setCurrentUser({ name: '', email: '' });
     localStorage.clear();
     navigate('/', { replace: true })
   };
@@ -72,72 +97,39 @@ function App() {
 
 
   // Signup
-  function handleSignUp({ name, email, password }) {
+  function signUp({ name, email, password }) {
     setAuthFormError(false);
     setAuthFormPreloader(true);
 
     authApi.signUp({ name, email, password })
       .then((userData) => {
         setCurrentUser(userData);
-        authApi.signIn({ email, password })
-          .then((jwt) => {
-            localStorage.setItem('jwt', jwt.token);
-          })
-          .then(() => handleAuthorization())
-          .catch((err) => {
-            handleAuthFormError(err);
-          })
+        handleSignIn(email, password, handleAuthorization);
       })
-      .catch((err) => {
-        handleAuthFormError(err);
-      })
+      .catch((err) => handleAuthFormError(err))
       .finally(() => setAuthFormPreloader(false));
   };
 
   // Signin
-  function handleSignIn({ email, password }) {
+  function signIn({ email, password }) {
     setAuthFormError(false);
     setAuthFormPreloader(true);
 
-    authApi.signIn({ email, password })
-      .then((jwt) => {
-        localStorage.setItem('jwt', jwt.token);
-      })
-      .then(() => handleAuthorization())
-      .catch((err) => {
-        handleAuthFormError(err);
-      })
-      .finally(() => setAuthFormPreloader(false));
+    handleSignIn(email, password, handleFullAuthorization);
   };
 
 
   /* Effects */
 
-  // During the checking in process, showing the preloader
-  // and waiting for server response
+
+  // Check authorization for protected routes
+  // While checking in show the preloader
   useEffect(() => {
     const jwt = localStorage.getItem('jwt');
+    const localSavedMovies = localStorage.getItem('savedMovies');
 
     if (jwt) {
-      mainApi.getUserInfo()
-        .then((userData) => {
-          setCurrentUser(userData);
-          setCheckedIn(true);
-          setLoggedIn(true);
-        })
-        .catch((err) => {
-          console.log(err.message);
-          setCheckedIn(true);
-        });
-    }
-    else {
-      setCheckedIn(true);
-    };
-  }, [isLoggedIn]);
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      const localSavedMovies = localStorage.getItem('savedMovies');
+      getUser();
 
       if (localSavedMovies !== null) {
         setStoredMovies(JSON.parse(localSavedMovies));
@@ -145,12 +137,16 @@ function App() {
       else {
         getSavedMovies();
       };
-    };
-  }, [isLoggedIn]);
-
+    }
+    else {
+      setCheckedIn(true);
+    }
+  }, []);
 
   useEffect(() => {
-    getSavedMovies();
+    if (isLoggedIn) {
+      getSavedMovies();
+    };
   }, [storedMovies.length]);
 
 
@@ -173,7 +169,7 @@ function App() {
 
             <Route path="sign-in" element={ <AuthForm
               isSignIn={ true }
-              handleSubmit={ handleSignIn }
+              handleSubmit={ signIn }
               preloader={ authFormPreloader }
               submitError={ authFormError }
               /> }
@@ -181,7 +177,7 @@ function App() {
 
             <Route path="sign-up" element={ <AuthForm
               isSignIn={ false }
-              handleSubmit={ handleSignUp }
+              handleSubmit={ signUp }
               preloader={ authFormPreloader }
               submitError={ authFormError }
               /> }

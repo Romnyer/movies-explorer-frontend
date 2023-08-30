@@ -88,10 +88,10 @@ function setCustomEmailValidError(evt) {
 /* Set submit error text */
 function setErrorText(code) {
   if (code === 400) {
-    return 'Переданы некорректные данные.';
+    return 'Вы ввели неправильный логин или пароль.';
   };
   if (code === 401) {
-    return 'Вы ввели неправильный логин или пароль.';
+    return 'Ошибка авторизации';
   };
   if (code === 409) {
     return 'Пользователь с таким email уже существует.';

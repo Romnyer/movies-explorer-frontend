@@ -1,3 +1,5 @@
+import { keyboard } from "@testing-library/user-event/dist/keyboard";
+
 class Api {
   constructor(config) {
     this._url =  config.baseUrl;
@@ -31,7 +33,7 @@ class Api {
     .then(res => this.handleResponse(res));
   };
 
-  signIn({ email, password }) {
+  signIn(email, password) {
     return fetch(`${this._url}/signin`, {
       method: 'POST',
       headers: this._headers,
@@ -100,14 +102,17 @@ const authApi = new Api({
   }
 });
 
-const token = localStorage.getItem('jwt');
-console.log(token)
-const mainApi = new Api({
-  baseUrl: 'https://api.krasilnikov-artem.nomoredomains.work',
-  headers: {
+function authHeaders() {
+  const token = localStorage.getItem('jwt');
+  return {
     'Content-Type': 'application/json',
     "authorization": `Bearer ${token}`,
-  }
+  };
+};
+
+const mainApi = new Api({
+  baseUrl: 'https://api.krasilnikov-artem.nomoredomains.work',
+  headers: authHeaders()
 });
 
 export { authApi, mainApi };
