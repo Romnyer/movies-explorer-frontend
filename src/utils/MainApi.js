@@ -1,5 +1,3 @@
-import { keyboard } from "@testing-library/user-event/dist/keyboard";
-
 class Api {
   constructor(config) {
     this._url =  config.baseUrl;
@@ -16,6 +14,14 @@ class Api {
         message: err.message,
       }));
   }
+
+  mainHeaders() {
+    const token = localStorage.getItem('jwt');
+    return {
+      'Content-Type': 'application/json',
+      "authorization": `Bearer ${token}`,
+    };
+  };
 
   /* Unprotected requests */
   // User requests
@@ -50,7 +56,7 @@ class Api {
   getUserInfo() {
     return fetch(`${this._url}/users/me`, {
       method: 'GET',
-      headers: this._headers,
+      headers: this.mainHeaders(),
     })
     .then(res => this.handleResponse(res));
   };
@@ -58,7 +64,7 @@ class Api {
   changeUserInfo(newName, newEmail) {
     return fetch(`${this._url}/users/me`, {
       method: 'PATCH',
-      headers: this._headers,
+      headers: this.mainHeaders(),
       body: JSON.stringify({
         name: newName,
         email: newEmail,
@@ -72,7 +78,7 @@ class Api {
   getUserMovies() {
     return fetch(`${this._url}/movies`, {
       method: 'GET',
-      headers: this._headers,
+      headers: this.mainHeaders(),
     })
     .then(res => this.handleResponse(res));
   };
@@ -80,7 +86,7 @@ class Api {
   likeCard(card) {
     return fetch(`${this._url}/movies`, {
       method: 'POST',
-      headers: this._headers,
+      headers: this.mainHeaders(),
       body: JSON.stringify(card),
     })
     .then(res => this.handleResponse(res));
@@ -89,7 +95,7 @@ class Api {
   dislikeCard(cardId) {
     return fetch(`${this._url}/movies/${cardId}`, {
       method: 'DELETE',
-      headers: this._headers,
+      headers: this.mainHeaders(),
     })
     .then(res => this.handleResponse(res));
   };
@@ -102,17 +108,8 @@ const authApi = new Api({
   }
 });
 
-function authHeaders() {
-  const token = localStorage.getItem('jwt');
-  return {
-    'Content-Type': 'application/json',
-    "authorization": `Bearer ${token}`,
-  };
-};
-
 const mainApi = new Api({
   baseUrl: 'https://api.krasilnikov-artem.nomoredomains.work',
-  headers: authHeaders()
 });
 
 export { authApi, mainApi };

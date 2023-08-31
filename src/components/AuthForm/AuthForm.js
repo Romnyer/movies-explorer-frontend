@@ -16,8 +16,7 @@ function AuthForm({ isSignIn, handleSubmit, preloader, submitError }) {
     values,
     handleChange,
     errors,
-    isValid,
-    resetForm
+    isValid
   } = useFormWithValidation();
 
 
@@ -32,9 +31,6 @@ function AuthForm({ isSignIn, handleSubmit, preloader, submitError }) {
   function handleFormSubmit(evt) {
     evt.preventDefault();
     handleSubmit(values);
-    if(!submitError) {
-      resetForm();
-    };
   };
 
 

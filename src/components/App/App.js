@@ -39,7 +39,7 @@ function App() {
   /* Handlers */
 
 
-  const getUser = function() {
+  function getUser() {
     mainApi.getUserInfo()
       .then((userData) => {
         setCurrentUser(userData);
@@ -52,7 +52,7 @@ function App() {
       });
   };
 
-  const getSavedMovies = function() {
+  function getSavedMovies() {
     mainApi.getUserMovies()
       .then((movies) => {
         setStoredMovies(movies);
