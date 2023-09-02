@@ -7,7 +7,7 @@ function ProtectedRoute ({ loggedIn, checkedIn, element }) {
   return (
     <>
       { checkedIn ?
-        loggedIn ? element : <Navigate to="/sign-in" replace />
+        loggedIn ? element : <Navigate to="/" replace />
         :
         <Preloader />
       }

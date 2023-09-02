@@ -1,8 +1,18 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import './PageNotFound.css';
 
 function PageNotFound() {
+
+  const navigate = useNavigate();
+
+
+  function goBack() {
+    navigate(-1);
+  };
+
+
+
   return (
     <div className="not-found">
 
@@ -13,7 +23,14 @@ function PageNotFound() {
 
       </div>
 
-      <Link className="not-found__link" to='/'>Назад</Link>
+      <button
+        className="not-found__button"
+        type="button"
+        name="notFoundButton"
+        onClick={ goBack }
+      >
+        Назад
+      </button>
 
     </div>
   )

@@ -28,9 +28,9 @@ function MoviesCardList({
     setNumberVisibleCards((state) => state + numberAdditionalCards);
   };
 
-  function handleMoviesNumber(number) {
-    setNumberVisibleCards(number);
-    setNumberAdditionalCards(number);
+  function handleMoviesNumber(visibleNumber, additionalNumber) {
+    setNumberVisibleCards(visibleNumber);
+    setNumberAdditionalCards(additionalNumber);
   };
 
   // Show searched films by request of SearchForm
@@ -78,9 +78,10 @@ function MoviesCardList({
 
   // Set number of visible cards depending on width of window
   useEffect(() => {
-    window.addEventListener('resize', () => moviesNumber(handleMoviesNumber));
+    const handleNumber = () => moviesNumber(handleMoviesNumber);
 
-    return () => window.removeEventListener('resize', () => moviesNumber(handleMoviesNumber));
+    window.addEventListener('resize', handleNumber);
+    return () => window.removeEventListener('resize', handleNumber);
   });
 
 

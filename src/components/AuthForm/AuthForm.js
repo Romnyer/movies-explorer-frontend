@@ -8,17 +8,24 @@ import Logo from '../Logo/Logo';
 import { useFormWithValidation } from '../../hooks/useFormValidation';
 import { setCustomNameValidError, setCustomEmailValidError, setErrorText } from '../../utils/utils';
 
-function AuthForm({ isSignIn, handleSubmit, preloader, submitError }) {
+function AuthForm({
+  isSignIn,
+  handleSubmit,
+  preloader,
+  submitError,
+  submitProcess
+}) {
 
-  const [submitErrorText, setSubmitErrorText] = useState(false);
+  const [submitErrorText, setSubmitErrorText] = useState(false),
+        [validity, setValidity] = useState(false);
 
   const {
     values,
     handleChange,
     errors,
-    isValid
+    isValid,
+    resetForm
   } = useFormWithValidation();
-
 
   function handleNameChange(evt) {
     setCustomNameValidError(evt);
@@ -41,6 +48,16 @@ function AuthForm({ isSignIn, handleSubmit, preloader, submitError }) {
   useEffect(() => {
     setSubmitErrorText('');
   }, [isSignIn]);
+
+  // Disable form during request process
+  useEffect(() => {
+    if (submitProcess) {
+      setValidity(true);
+    }
+    else {
+      setValidity(!isValid);
+    };
+  }, [isValid, submitProcess]);
 
 
 
@@ -74,6 +91,7 @@ function AuthForm({ isSignIn, handleSubmit, preloader, submitError }) {
                   value={ values.name || "" }
                   autoComplete="off"
                   onChange={ handleNameChange }
+                  disabled={ submitProcess && 'disabled' }
                   minLength={ 2 }
                   maxLength={ 30 }
                   required
@@ -96,6 +114,7 @@ function AuthForm({ isSignIn, handleSubmit, preloader, submitError }) {
               value={ values.email || "" }
               autoComplete="off"
               onChange={ handleEmailChange }
+              disabled={ submitProcess && 'disabled' }
               required
             />
 
@@ -113,6 +132,7 @@ function AuthForm({ isSignIn, handleSubmit, preloader, submitError }) {
               type="password"
               value={ values.password || "" }
               onChange={ handleChange }
+              disabled={ submitProcess && 'disabled' }
               autoComplete="off"
               minLength={ 8 }
               required
@@ -135,12 +155,12 @@ function AuthForm({ isSignIn, handleSubmit, preloader, submitError }) {
           <button
             className={
               `auth__submit-button
-              ${ !isValid ? 'auth__submit-button_error' : '' }
+              ${ validity ? 'auth__submit-button_error' : '' }
               ${ preloader ? 'auth__submit-button_preloader' : '' }`
             }
             name="authFormSubmit"
             type="submit"
-            disabled={!isValid && 'disabled'}
+            disabled={ validity && 'disabled' }
           >
             { isSignIn ? 'Войти' : 'Зарегистрироваться' }
           </button>
@@ -156,6 +176,7 @@ function AuthForm({ isSignIn, handleSubmit, preloader, submitError }) {
               :
               "/sign-in"
             }
+            onClick={ resetForm }
           >
             { isSignIn ? 'Регистрация' : 'Войти' }
           </Link>

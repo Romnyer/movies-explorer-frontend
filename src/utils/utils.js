@@ -1,3 +1,19 @@
+// Constants
+import {
+  SHORTS_TIME,
+  LARGE_VISIBLE_NUMBER,
+  MEDIUM_VISIBLE_NUMBER,
+  SMALL_VISIBLE_NUMBER,
+  STANDART_ADDITIONAL_NUMBER,
+  SMALL_ADDITIONAL_NUMBER,
+  MEDIUM_WINDOW_WIDTH,
+  SMALL_WINDOW_WIDTH,
+  BAD_REQUEST_ERROR,
+  UNATHORIZED_ERROR,
+  CONFLICT_ERROR,
+  SERVER_ERROR
+} from '../constants/constants';
+
 // Shows films duration in card
 function calcDuration(duration) {
   const hours = Math.floor(duration / 60);
@@ -18,18 +34,20 @@ function calcDuration(duration) {
 // Set number of visible cards depending on width of window
 function moviesNumber(handler, time = 500) {
   const windowWidth = window.innerWidth;
-  let moviesNumber = 12;
+  let visibleNumber = LARGE_VISIBLE_NUMBER;
+  let additionalNumber = STANDART_ADDITIONAL_NUMBER;
 
-  if (windowWidth < 769) {
-    moviesNumber = 8;
+  if (windowWidth < MEDIUM_WINDOW_WIDTH) {
+    visibleNumber = MEDIUM_VISIBLE_NUMBER;
+    additionalNumber = SMALL_ADDITIONAL_NUMBER
   };
 
-  if (windowWidth < 481) {
-    moviesNumber = 5;
+  if (windowWidth < SMALL_WINDOW_WIDTH) {
+    visibleNumber = SMALL_VISIBLE_NUMBER;
   };
 
   setTimeout(() => {
-    handler(moviesNumber);
+    handler(visibleNumber, additionalNumber);
   }, time);
 };
 
@@ -43,7 +61,7 @@ function searchFilms(film, request, isShort = false) {
   const filmText = film.nameRU.toLowerCase();
 
   if (isShort) {
-    if (film.duration <= 40) {
+    if (film.duration <= SHORTS_TIME) {
       return searchFilm(filmText, requestText);
     }
 
@@ -87,16 +105,16 @@ function setCustomEmailValidError(evt) {
 
 /* Set submit error text */
 function setErrorText(code) {
-  if (code === 400) {
+  if (code === BAD_REQUEST_ERROR) {
     return 'Вы ввели неправильный логин или пароль.';
   };
-  if (code === 401) {
+  if (code === UNATHORIZED_ERROR) {
     return 'Ошибка авторизации';
   };
-  if (code === 409) {
+  if (code === CONFLICT_ERROR) {
     return 'Пользователь с таким email уже существует.';
   };
-  if (code === 500) {
+  if (code === SERVER_ERROR) {
     return 'На сервере произошла ошибка.';
   };
   return '';

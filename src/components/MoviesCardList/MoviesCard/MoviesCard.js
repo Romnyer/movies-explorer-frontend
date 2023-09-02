@@ -11,9 +11,19 @@ function MoviesCard({ card, isCardDelete = false }) {
   const [isCardSaved, setCardSaved] = useState(false),
         [buttonClass, setButtonClass] = useState('');
 
-  const { storedMovies, setStoredMovies } = useContext(SavedMoviesContext);
+  const { storedMovies,
+    setStoredMovies,
+    setPopupOpened,
+    setPopupError
+  } = useContext(SavedMoviesContext);
   const moviesUrl = 'https://api.nomoreparties.co/';
   const duration = calcDuration(card.duration);
+
+  function handleLikeError(err) {
+    console.log(err.message)
+    setPopupOpened(true);
+    setPopupError(true);
+  }
 
   function handleSave() {
     const movieData = {
@@ -30,9 +40,8 @@ function MoviesCard({ card, isCardDelete = false }) {
       .then((movie) => {
         setCardSaved(!isCardSaved);
         setStoredMovies((state) => ([...state, movie]));
-
       })
-      .catch((err) => console.log(err.message));
+      .catch((err) => handleLikeError(err));
   };
 
   function handleDelete() {
@@ -45,7 +54,7 @@ function MoviesCard({ card, isCardDelete = false }) {
         setStoredMovies((state) => state.filter((m) => m._id !== movie._id));
 
       })
-      .catch((err) => console.log(err.message));
+      .catch((err) => handleLikeError(err));
   };
 
 

@@ -12,6 +12,7 @@ import SavedMovies from '../SavedMovies/SavedMovies';
 import Footer from '../Footer/Footer';
 import PageNotFound from '../PageNotFound/PageNotFound';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
+import Popup from '../Popup/Popup';
 
 import { useVisability } from '../../hooks/useVisability';
 import { authApi, mainApi } from '../../utils/MainApi';
@@ -25,7 +26,10 @@ function App() {
         [currentUser, setCurrentUser] = useState({}),
         [authFormPreloader, setAuthFormPreloader] = useState(false),
         [authFormError, setAuthFormError] = useState(''),
-        [storedMovies, setStoredMovies] = useState([]);
+        [storedMovies, setStoredMovies] = useState([]),
+        [submitProcess, setSubmitProcess] = useState(false),
+        [isPopupOpened, setPopupOpened] = useState(false),
+        [popupError, setPopupError] = useState(false);
 
   const navigate = useNavigate();
   const {
@@ -75,11 +79,16 @@ function App() {
   function handleAuthFormError(err) {
     console.log(err.message);
     setAuthFormError(err.status);
+    setSubmitProcess(false);
   };
 
   function handleSignIn(email, password, handleAuth) {
     authApi.signIn(email, password)
-      .then((jwt) => localStorage.setItem('jwt', jwt.token))
+      .then((jwt) => {
+        localStorage.setItem('jwt', jwt.token);
+
+        setSubmitProcess(false);
+      })
       .then(() => handleAuth())
       .catch((err) => handleAuthFormError(err))
       .finally(() => setAuthFormPreloader(false));
@@ -89,7 +98,7 @@ function App() {
     setLoggedIn(false);
     setCurrentUser({ name: '', email: '' });
     localStorage.clear();
-    navigate('/', { replace: true })
+    navigate('/', { replace: true });
   };
 
 
@@ -100,11 +109,14 @@ function App() {
   function signUp({ name, email, password }) {
     setAuthFormError(false);
     setAuthFormPreloader(true);
+    setSubmitProcess(true);
 
     authApi.signUp({ name, email, password })
       .then((userData) => {
         setCurrentUser(userData);
         handleSignIn(email, password, handleAuthorization);
+
+        setSubmitProcess(false);
       })
       .catch((err) => handleAuthFormError(err))
       .finally(() => setAuthFormPreloader(false));
@@ -114,6 +126,7 @@ function App() {
   function signIn({ email, password }) {
     setAuthFormError(false);
     setAuthFormPreloader(true);
+    setSubmitProcess(true);
 
     handleSignIn(email, password, handleFullAuthorization);
   };
@@ -123,37 +136,34 @@ function App() {
 
 
   // Check authorization for protected routes
-  // While checking in show the preloader
+  // Show the preloader while checking in
   useEffect(() => {
     const jwt = localStorage.getItem('jwt');
-    const localSavedMovies = localStorage.getItem('savedMovies');
 
     if (jwt) {
       getUser();
-
-      if (localSavedMovies !== null) {
-        setStoredMovies(JSON.parse(localSavedMovies));
-      }
-      else {
-        getSavedMovies();
-      };
+      getSavedMovies();
     }
     else {
       setCheckedIn(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      getSavedMovies();
     };
-  }, [storedMovies.length]);
+  }, []);
 
 
 
   return (
-    <CurrentUserContext.Provider value={ { currentUser, setCurrentUser } }>
-      <SavedMoviesContext.Provider value={ { storedMovies, setStoredMovies } }>
+    <CurrentUserContext.Provider value={ {
+      currentUser,
+      setCurrentUser,
+      setPopupOpened,
+      setPopupError
+    } }>
+      <SavedMoviesContext.Provider value={ {
+        storedMovies,
+        setStoredMovies,
+        setPopupOpened,
+        setPopupError
+      } }>
         <div className="page">
 
           { headerVisability &&
@@ -167,20 +177,40 @@ function App() {
           <Routes>
             <Route path="/" element={ <Main /> } />
 
-            <Route path="sign-in" element={ <AuthForm
-              isSignIn={ true }
-              handleSubmit={ signIn }
-              preloader={ authFormPreloader }
-              submitError={ authFormError }
-              /> }
+            <Route
+              path="sign-in"
+              element={
+                <ProtectedRoute
+                loggedIn={ !isLoggedIn }
+                checkedIn={ true }
+                element={
+                  <AuthForm
+                    isSignIn={true}
+                    handleSubmit={signIn}
+                    preloader={authFormPreloader}
+                    submitError={authFormError}
+                    submitProcess={submitProcess}
+                  />
+                } />
+              }
             />
 
-            <Route path="sign-up" element={ <AuthForm
-              isSignIn={ false }
-              handleSubmit={ signUp }
-              preloader={ authFormPreloader }
-              submitError={ authFormError }
-              /> }
+            <Route
+              path="sign-up"
+              element={
+                <ProtectedRoute
+                loggedIn={ !isLoggedIn }
+                checkedIn={ true }
+                element={
+                  <AuthForm
+                    isSignIn={false}
+                    handleSubmit={signUp}
+                    preloader={authFormPreloader}
+                    submitError={authFormError}
+                    submitProcess={submitProcess}
+                  />
+                } />
+              }
             />
 
             <Route
@@ -227,6 +257,12 @@ function App() {
           </Routes>
 
           { footerVisability && <Footer /> }
+
+          <Popup
+            isOpen={ isPopupOpened }
+            setIsOpen={ setPopupOpened }
+            submitError={ popupError }
+          />
         </div>
       </SavedMoviesContext.Provider>
     </CurrentUserContext.Provider>

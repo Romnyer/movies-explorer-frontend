@@ -13,12 +13,19 @@ function Profile({ handleLogout }) {
   const [isEditing, setEditing] = useState(false),
         [errorCode, setErrorCode] = useState(false),
         [submitErrorText, setSubmitErrorText] = useState(''),
-        [validity, setValidity] = useState(false);
+        [validity, setValidity] = useState(false),
+        [inputAccess, setInputAccess] = useState(false),
+        [submitProcess, setSubmitProcess] = useState(false);
 
   const profileName = useRef(),
         profileEmail = useRef();
 
-  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
+  const {
+    currentUser,
+    setCurrentUser,
+    setPopupOpened,
+    setPopupError
+  } = useContext(CurrentUserContext);
   const {
     values,
     handleChange,
@@ -37,6 +44,8 @@ function Profile({ handleLogout }) {
 
   function handleFormSubmit(evt) {
     evt.preventDefault();
+    setSubmitProcess(true);
+
     mainApi.changeUserInfo(values.name, values.email)
       .then((newData) => {
         values.name = newData.name;
@@ -45,10 +54,16 @@ function Profile({ handleLogout }) {
 
         setEditing(false);
         setErrorCode(false);
+        setPopupOpened(true);
+        setPopupError(false);
+        setSubmitProcess(false);
       })
       .catch((err) => {
         console.log(err.message);
         setErrorCode(err.status);
+        setPopupOpened(true);
+        setPopupError(true);
+        setSubmitProcess(false);
       });
   };
 
@@ -89,6 +104,18 @@ function Profile({ handleLogout }) {
     };
   }, [values.name, currentUser.name, values.email, currentUser.email]);
 
+  // Disable form during request process
+  useEffect(() => {
+    if(submitProcess) {
+      setValidity(true);
+      setInputAccess(true);
+    }
+    else {
+      setValidity(!isValid);
+      setInputAccess(!isEditing);
+    };
+  }, [submitProcess, isValid, isEditing]);
+
   useEffect(() => {
     setSubmitErrorText(setErrorText(errorCode));
   }, [errorCode]);
@@ -110,18 +137,18 @@ function Profile({ handleLogout }) {
         <div className="profile__container">
           <p className="profile__text">Имя</p>
           <input
-              className="profile__input"
-              id="profile_field-name"
-              name="name"
-              type="text"
-              value={ values.name || "" }
-              ref={ profileName }
-              disabled={ !isEditing && 'disabled' }
-              onChange={ handleNameChange }
-              minLength={ 2 }
-              maxLength={ 40 }
-              required
-            />
+            className="profile__input"
+            id="profile_field-name"
+            name="name"
+            type="text"
+            value={values.name || ""}
+            ref={profileName}
+            disabled={inputAccess && 'disabled'}
+            onChange={handleNameChange}
+            minLength={2}
+            maxLength={40}
+            required
+          />
 
           <span className="profile__error-text">
             {errors.name}
@@ -131,16 +158,16 @@ function Profile({ handleLogout }) {
 
           <p className="profile__text">E-mail</p>
           <input
-              className="profile__input"
-              id="profile_field-email"
-              name="email"
-              type="email"
-              value={ values.email || "" }
-              ref={ profileEmail }
-              disabled={ !isEditing && 'disabled' }
-              onChange={ handleEmailChange }
-              required
-            />
+            className="profile__input"
+            id="profile_field-email"
+            name="email"
+            type="email"
+            value={values.email || ""}
+            ref={profileEmail}
+            disabled={inputAccess && 'disabled'}
+            onChange={handleEmailChange}
+            required
+          />
 
           <span className="profile__error-text">
             {errors.email}
@@ -153,7 +180,7 @@ function Profile({ handleLogout }) {
         */ }
         <div className="profile__buttons">
           <span className="profile__error-text">
-            {errorCode && submitErrorText }
+            { errorCode && submitErrorText }
           </span>
 
           { !isEditing ?
