@@ -65,16 +65,15 @@
 }
 
 
-@media (max-width: 455px) {
+@media (max-width: 480px) {
 
   .cards {
     padding: 40px 10px;
   }
 
   .cards__list {
-    display: block;
-
-    list-style-type: none;
+    grid-template-columns: minmax(200px, 400px);
+    gap: 16px;
   }
 
 }
@@ -84,20 +83,6 @@
 
   .cards {
     min-height: 688px;
-  }
-
-  .cards__list {
-    display: block;
-
-    list-style-type: none;
-  }
-
-  .cards__item {
-    margin-top: 16px;
-  }
-
-  .cards__item:first-of-type {
-    margin-top: 0;
   }
 
   .cards__button {

@@ -1,36 +1,63 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import './AuthForm.css';
 
 import Logo from '../Logo/Logo';
 
-function Auth({ isSignIn, handleLoggedIn }) {
+import { useFormWithValidation } from '../../hooks/useFormValidation';
+import { setCustomNameValidError, setCustomEmailValidError, setErrorText } from '../../utils/utils';
 
-  const [isFormError, setFormError] = useState(false);
+function AuthForm({
+  isSignIn,
+  handleSubmit,
+  preloader,
+  submitError,
+  submitProcess
+}) {
 
-  function handleSignIn(evt) {
-    evt.preventDefault();
-    handleLoggedIn();
+  const [submitErrorText, setSubmitErrorText] = useState(false),
+        [validity, setValidity] = useState(false);
+
+  const {
+    values,
+    handleChange,
+    errors,
+    isValid,
+    resetForm
+  } = useFormWithValidation();
+
+  function handleNameChange(evt) {
+    setCustomNameValidError(evt);
   };
 
-  function handleSignUp(evt) {
-    evt.preventDefault();
-    setFormError(true);
+  function handleEmailChange(evt) {
+    setCustomEmailValidError(evt);
   };
 
-  // Clear submit button error style
-  function handlePathChange() {
-    console.log(isSignIn)
-    if ( !isSignIn ) {
-      setFormError(false);
+  function handleFormSubmit(evt) {
+    evt.preventDefault();
+    handleSubmit(values);
+  };
+
+
+  useEffect(() => {
+    setSubmitErrorText(setErrorText(submitError));
+  }, [submitError]);
+
+  useEffect(() => {
+    setSubmitErrorText('');
+  }, [isSignIn]);
+
+  // Disable form during request process
+  useEffect(() => {
+    if (submitProcess) {
+      setValidity(true);
     }
-  }
-
-  function handleChange() {
-    setFormError(false);
-  }
-
+    else {
+      setValidity(!isValid);
+    };
+  }, [isValid, submitProcess]);
 
 
 
@@ -44,6 +71,8 @@ function Auth({ isSignIn, handleLoggedIn }) {
       <form
         className="auth__form"
         name="authForm"
+        onChange={ handleChange }
+        onSubmit={ handleFormSubmit }
         noValidate
       >
 
@@ -52,14 +81,25 @@ function Auth({ isSignIn, handleLoggedIn }) {
           { /* Field only for registration page */ }
           { !isSignIn &&
             (<>
-              <p className="auth__field-text">Имя</p><label className="auth__label">
-              <input
-                className="auth__field"
-                id="auth_field-name"
-                name="authFieldName"
-                type="text"
-                onChange={ handleChange }
-              />
+              <p className="auth__field-text">Имя</p>
+              <label className="auth__label">
+                <input
+                  className="auth__field"
+                  id="auth_field-name"
+                  name="name"
+                  type="text"
+                  value={ values.name || "" }
+                  autoComplete="off"
+                  onChange={ handleNameChange }
+                  disabled={ submitProcess && 'disabled' }
+                  minLength={ 2 }
+                  maxLength={ 30 }
+                  required
+                />
+
+                <span className="auth__error-text">
+                  { errors.name }
+                </span>
               </label>
             </>)
           }
@@ -69,26 +109,37 @@ function Auth({ isSignIn, handleLoggedIn }) {
             <input
               className="auth__field"
               id="auth_field-email"
-              name="authFieldEmail"
+              name="email"
               type="email"
-              onChange={ handleChange }
+              value={ values.email || "" }
+              autoComplete="off"
+              onChange={ handleEmailChange }
+              disabled={ submitProcess && 'disabled' }
+              required
             />
+
+            <span className="auth__error-text">
+              { errors.email }
+            </span>
           </label>
 
           <p className="auth__field-text">Пароль</p>
           <label className="auth__label">
             <input
-              className={ `auth__field ${ isFormError ? 'auth__field_error' : '' }` }
+              className="auth__field"
               id="auth_field-password"
-              name="authFieldPassword"
+              name="password"
               type="password"
+              value={ values.password || "" }
               onChange={ handleChange }
+              disabled={ submitProcess && 'disabled' }
+              autoComplete="off"
               minLength={ 8 }
+              required
             />
 
-            { /* Form error text */ }
             <span className="auth__error-text">
-              { isFormError && 'Что-то пошло не так...' }
+              { errors.password }
             </span>
 
           </label>
@@ -96,12 +147,20 @@ function Auth({ isSignIn, handleLoggedIn }) {
 
         <div className="auth__buttons">
 
-          { /* Submit button changes function and text depending of the page */ }
+          { /* Submit error text */ }
+          <span className="auth__error-text">
+            { submitError && submitErrorText }
+          </span>
+
           <button
-            className={ `auth__submit-button ${ isFormError ? 'auth__submit-button_error' : '' }` }
+            className={
+              `auth__submit-button
+              ${ validity ? 'auth__submit-button_error' : '' }
+              ${ preloader ? 'auth__submit-button_preloader' : '' }`
+            }
             name="authFormSubmit"
-            type="button"
-            onClick={ isSignIn ? handleSignIn : handleSignUp }
+            type="submit"
+            disabled={ validity && 'disabled' }
           >
             { isSignIn ? 'Войти' : 'Зарегистрироваться' }
           </button>
@@ -112,12 +171,12 @@ function Auth({ isSignIn, handleLoggedIn }) {
 
           <Link
             className="auth__link"
-            onClick={ handlePathChange }
             to={ isSignIn ?
               "/sign-up"
               :
               "/sign-in"
             }
+            onClick={ resetForm }
           >
             { isSignIn ? 'Регистрация' : 'Войти' }
           </Link>
@@ -128,4 +187,4 @@ function Auth({ isSignIn, handleLoggedIn }) {
   )
 };
 
-export default Auth;
+export default AuthForm;

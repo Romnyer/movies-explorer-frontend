@@ -1,6 +1,10 @@
 @import url(./vendor/normalize.css);
 @import url(./vendor/fonts/Inter-Web/inter.css);
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   display: flex;
   flex-direction: column;

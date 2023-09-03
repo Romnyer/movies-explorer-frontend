@@ -24,19 +24,23 @@
   line-height: 19px;
 }
 
-.not-found__link {
+.not-found__button {
   margin-top: 184px;
+
+  background: none;
+  border: none;
 
   transition-property: opacity;
   transition-duration: .7s;
 
   font-size: 14px;
   line-height: 17px;
-  text-decoration: none;
   color: #4285F4;
+
+  cursor: pointer;
 }
 
-.not-found__link {
+.not-found__button {
   opacity: .7;
 }
 
@@ -66,7 +70,7 @@
     line-height: 15px;
   }
 
-  .not-found__link {
+  .not-found__button {
     margin-top: 284px;
 
     font-size: 12px;

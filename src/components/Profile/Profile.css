@@ -28,16 +28,20 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  align-items: flex-start;
 }
 
 .profile__text {
-  width: 141px;
   margin: 0;
 
   font-size: 11px;
   line-height: 13px;
   font-weight: 500;
   text-align: left;
+}
+
+.profile__label {
+  text-align: right;
 }
 
 .profile__input {
@@ -53,16 +57,27 @@
   color: #fff;
 }
 
-.profile__input:focus-visible {
+.profile__input:focus {
   border-radius: 3px;
   outline: 1px solid #4285F4;
 }
 
+.profile__error-text {
+  min-height: 12px;
+  width: 100%;
+  display: block;
+  margin: 4px 0 0;
+
+  text-align: right;
+  font-size: 10px;
+  line-height: 10px;
+  color: #ee3465;
+}
+
 
 .profile__line {
-  width: 100%;
+  width: 410px;
 
-  padding-top: 16px;
   margin-bottom: 17px;
 
   border-bottom: 1px solid #424242;
@@ -136,18 +151,6 @@
   background-color: #F8F8F8;
   color: #C2C2C2;
   cursor: auto;
-}
-
-.profile__error-text {
-  min-height: 13px;
-  display: block;
-
-  margin: 0 0 20px;
-
-  font-size: 11px;
-  line-height: 13px;
-  text-align: center;
-  color: #FF004C;
 }
 
 

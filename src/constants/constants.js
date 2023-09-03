@@ -1,98 +1,30 @@
-import pic from '../images/pic__COLOR_pic.png';
+/* Movies numbers */
+const SHORTS_TIME = 40;
+const LARGE_VISIBLE_NUMBER = 12;
+const MEDIUM_VISIBLE_NUMBER = 8;
+const SMALL_VISIBLE_NUMBER = 5;
+const STANDART_ADDITIONAL_NUMBER = 3;
+const SMALL_ADDITIONAL_NUMBER = 2;
+const MEDIUM_WINDOW_WIDTH = 769;
+const SMALL_WINDOW_WIDTH = 481;
 
-const cardsData = [
-  {
-    title: 'В погоне за Бенкси',
-    time: '27 минут',
-    pic: pic,
-    saved: true,
-    _id: 0
-  },
+/* Server errors */
+const BAD_REQUEST_ERROR = 400;
+const UNATHORIZED_ERROR = 401;
+const CONFLICT_ERROR = 409;
+const SERVER_ERROR = 500;
 
-  {
-    title: 'В погоне за Бенкси',
-    time: '27 минут',
-    pic: pic,
-    saved: true,
-    _id: 1
-  },
-
-  {
-    title: 'В погоне за Бенкси',
-    time: '27 минут',
-    pic: pic,
-    saved: false,
-    _id: 2
-  },
-  {
-    title: 'В погоне за Бенкси',
-    time: '27 минут',
-    pic: pic,
-    saved: false,
-    _id: 3
-  },
-
-  {
-    title: 'В погоне за Бенкси',
-    time: '27 минут',
-    pic: pic,
-    saved: false,
-    _id: 4
-  },
-
-  {
-    title: 'В погоне за Бенкси',
-    time: '27 минут',
-    pic: pic,
-    saved: true,
-    _id: 5
-  },
-  {
-    title: 'В погоне за Бенкси',
-    time: '27 минут',
-    pic: pic,
-    saved: false,
-    _id: 6
-  },
-
-  {
-    title: 'В погоне за Бенкси',
-    time: '27 минут',
-    pic: pic,
-    saved: false,
-    _id: 7
-  },
-
-  {
-    title: 'В погоне за Бенкси',
-    time: '27 минут',
-    pic: pic,
-    saved: false,
-    _id: 8
-  },
-  {
-    title: 'В погоне за Бенкси',
-    time: '27 минут',
-    pic: pic,
-    saved: false,
-    _id: 9
-  },
-
-  {
-    title: 'В погоне за Бенкси',
-    time: '27 минут',
-    pic: pic,
-    saved: false,
-    _id: 10
-  },
-
-  {
-    title: 'В погоне за Бенкси',
-    time: '27 минут',
-    pic: pic,
-    saved: false,
-    _id: 11
-  },
-];
-
-export { cardsData };
+export {
+  SHORTS_TIME,
+  LARGE_VISIBLE_NUMBER,
+  MEDIUM_VISIBLE_NUMBER,
+  SMALL_VISIBLE_NUMBER,
+  STANDART_ADDITIONAL_NUMBER,
+  SMALL_ADDITIONAL_NUMBER,
+  MEDIUM_WINDOW_WIDTH,
+  SMALL_WINDOW_WIDTH,
+  BAD_REQUEST_ERROR,
+  UNATHORIZED_ERROR,
+  CONFLICT_ERROR,
+  SERVER_ERROR
+};

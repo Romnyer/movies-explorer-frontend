@@ -1,48 +1,90 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import { Link } from 'react-router-dom';
 
 import './Profile.css';
 
-function Profile({ handleLogout, profileName, profileEmail }) {
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import { useFormWithValidation } from '../../hooks/useFormValidation';
+import { setCustomNameValidError, setCustomEmailValidError, setErrorText } from '../../utils/utils';
+import { mainApi } from '../../utils/MainApi';
 
-  const [userName, setUserName] = useState(profileName),
-        [userEmail, setUserEmail] = useState(profileEmail),
-        [isEditing, setEditing] = useState(false),
-        [isError, setError] = useState(false);
+function Profile({ handleLogout }) {
 
-  const profileInput = useRef();
+  const [isEditing, setEditing] = useState(false),
+        [errorCode, setErrorCode] = useState(false),
+        [submitErrorText, setSubmitErrorText] = useState(''),
+        [validity, setValidity] = useState(false),
+        [inputAccess, setInputAccess] = useState(false),
+        [submitProcess, setSubmitProcess] = useState(false);
+
+  const profileName = useRef(),
+        profileEmail = useRef();
+
+  const {
+    currentUser,
+    setCurrentUser,
+    setPopupOpened,
+    setPopupError
+  } = useContext(CurrentUserContext);
+  const {
+    values,
+    handleChange,
+    errors,
+    isValid
+  } = useFormWithValidation();
 
 
   function handleNameChange(evt) {
-    setUserName(evt.target.value);
-    setError(false);
+    setCustomNameValidError(evt);
   };
 
   function handleEmailChange(evt) {
-    setUserEmail(evt.target.value);
-    setError(false);
+    setCustomEmailValidError(evt);
   };
 
-  function handleSubmit(evt) {
+  function handleFormSubmit(evt) {
     evt.preventDefault();
-    setEditing(false);
+    setSubmitProcess(true);
+
+    mainApi.changeUserInfo(values.name, values.email)
+      .then((newData) => {
+        values.name = newData.name;
+        values.email = newData.email;
+        setCurrentUser(newData);
+
+        setEditing(false);
+        setErrorCode(false);
+        setPopupOpened(true);
+        setPopupError(false);
+        setSubmitProcess(false);
+      })
+      .catch((err) => {
+        console.log(err.message);
+        setErrorCode(err.status);
+        setPopupOpened(true);
+        setPopupError(true);
+        setSubmitProcess(false);
+      });
   };
 
-  function handleError() {
-    setError(true);
-  }
+  function setValues() {
+    values.name = currentUser.name;
+    values.email = currentUser.email;
+  };
 
   function handleEditing() {
     setEditing(true);
-    profileInput.current.focus();
-  }
+    profileName.current.focus();
+    profileEmail.current.focus();
+  };
 
   function handleStopEditing() {
-    setUserName(profileName);
-    setUserEmail(profileEmail);
+    setValues();
     setEditing(false);
-    setError(false);
-  }
+    setErrorCode(false);
+    errors.name = '';
+    errors.email = '';
+  };
 
   function logout() {
     handleLogout();
@@ -50,23 +92,46 @@ function Profile({ handleLogout, profileName, profileEmail }) {
 
 
   useEffect(() => {
-    if (userName !== profileName || userEmail !== profileEmail) {
-      setEditing(true);
-    }
-  }, [userName, userEmail]);
+    setValues();
+  }, []);
 
+  useEffect(() => {
+    if (values.name === currentUser.name && values.email === currentUser.email) {
+      setValidity(true);
+    }
+    else {
+      setValidity(!isValid);
+    };
+  }, [values.name, currentUser.name, values.email, currentUser.email]);
+
+  // Disable form during request process
+  useEffect(() => {
+    if(submitProcess) {
+      setValidity(true);
+      setInputAccess(true);
+    }
+    else {
+      setValidity(!isValid);
+      setInputAccess(!isEditing);
+    };
+  }, [submitProcess, isValid, isEditing]);
+
+  useEffect(() => {
+    setSubmitErrorText(setErrorText(errorCode));
+  }, [errorCode]);
 
 
   return (
     <div className="profile">
 
-      <h1 className="profile__title">{ `Привет, ${ profileName }!` }</h1>
+      <h1 className="profile__title">{ `Привет, ${ currentUser.name }!` }</h1>
 
       <form
         className="profile__form"
         name="profile__form"
         noValidate
-        onSubmit={ handleSubmit }
+        onChange={ handleChange }
+        onSubmit={ handleFormSubmit }
 
       >
         <div className="profile__container">
@@ -74,15 +139,20 @@ function Profile({ handleLogout, profileName, profileEmail }) {
           <input
             className="profile__input"
             id="profile_field-name"
-            name="profileName"
+            name="name"
             type="text"
-            value={ userName || '' }
-            ref={ profileInput }
-            disabled={ !isEditing }
-            onChange={ handleNameChange }
-            minLength={ 2 }
-            maxLength={ 30 }
+            value={values.name || ""}
+            ref={profileName}
+            disabled={inputAccess && 'disabled'}
+            onChange={handleNameChange}
+            minLength={2}
+            maxLength={40}
+            required
           />
+
+          <span className="profile__error-text">
+            {errors.name}
+          </span>
 
           <div className="profile__line" />
 
@@ -90,14 +160,18 @@ function Profile({ handleLogout, profileName, profileEmail }) {
           <input
             className="profile__input"
             id="profile_field-email"
-            name="profileEmail"
+            name="email"
             type="email"
-            value={ userEmail || '' }
-            disabled={ !isEditing }
-            onChange={ handleEmailChange }
-            minLength={ 2 }
-            maxLength={ 30 }
+            value={values.email || ""}
+            ref={profileEmail}
+            disabled={inputAccess && 'disabled'}
+            onChange={handleEmailChange}
+            required
           />
+
+          <span className="profile__error-text">
+            {errors.email}
+          </span>
         </div>
 
         { /*
@@ -106,7 +180,7 @@ function Profile({ handleLogout, profileName, profileEmail }) {
         */ }
         <div className="profile__buttons">
           <span className="profile__error-text">
-            {isError && 'При обновлении профиля произошла ошибка.' }
+            { errorCode && submitErrorText }
           </span>
 
           { !isEditing ?
@@ -135,11 +209,10 @@ function Profile({ handleLogout, profileName, profileEmail }) {
             (<>
 
               <button
-                className={ `profile__submit-button ${ isError ? 'profile__submit-button_error' : '' }` }
-                type="button"
+                className={ `profile__submit-button ${ validity ? 'profile__submit-button_error' : '' }` }
+                type="submit"
                 name="profileSubmitButton"
-                disabled={ isError }
-                onClick={ handleError }
+                disabled={ validity && 'disabled' }
               >
                 Сохранить
               </button>

@@ -4,6 +4,13 @@
 
 .logo__pic {
   display: block;
+
+  transition-property: opacity;
+  transition-duration: .7s;
+}
+
+.logo__pic:hover {
+  opacity: .8;
 }
 
 @media (max-width: 768px) {
